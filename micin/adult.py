@@ -37,7 +37,7 @@ for i in range(len(y_test)):
 trupred = 0
 print y_test
 print y_predicted
-# print accuracy_score(y_test, y_predicted)*100, "%"
+
 # check accuracy
 for i in range(len(y_predicted)):
     if y_predicted[i] == y_test[i]:
