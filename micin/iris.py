@@ -17,7 +17,7 @@ y = dataset.target
 # kf = StratifiedKFold(n_splits=sizecv, shuffle=True, random_state=123)
 # for train, test in kf.split(X, Y):
 df = pd.DataFrame(x)
-x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.5)
+x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.8)
 y_test = y_test.tolist()
 print "Length: ",len(y_test)
 # x_train = x[:100]
@@ -49,7 +49,7 @@ print "Length: ",len(y_test)
 mf = get_mf(dataset)
 mfc = membership.membershipfunction.MemFuncs(mf)
 anf = anfis.ANFIS(x_train, y_train, mfc)
-anf.trainHybridJangOffLine(epochs=3)
+anf.trainHybridJangOffLine(epochs=10)
 # for i in range(0,119):
 #      print round(anf.fittedValues[i],3)
 y_predicted = []
