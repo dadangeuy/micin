@@ -1,11 +1,11 @@
+from operator import truediv
+
+import pandas as pd
+from anfis import anfis
+from anfis import membership
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
-import pandas as pd
-from operator import truediv
-import numpy as np
-from anfis import membership
-from anfis import anfis
-from sklearn.metrics import accuracy_score
+from dataset import load_adult
 
 dataset = load_iris()
 x = dataset.data
@@ -15,7 +15,7 @@ y = dataset.target
 # kf = StratifiedKFold(n_splits=sizecv, shuffle=True, random_state=123)
 # for train, test in kf.split(X, Y):
 df = pd.DataFrame(dataset.data)
-x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.2)
+x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.1)
 y_test = y_test.tolist()
 print "Length: ",len(y_test)
 # x_train = x[:100]
