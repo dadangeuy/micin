@@ -6,8 +6,7 @@ from anfis import membership
 from sklearn.datasets import load_iris
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
-import numpy
-from dataset import load_adult
+
 from membership import get_mf
 
 dataset = load_iris()
@@ -17,8 +16,8 @@ y = dataset.target
 # sizecv = 5
 # kf = StratifiedKFold(n_splits=sizecv, shuffle=True, random_state=123)
 # for train, test in kf.split(X, Y):
-df = pd.DataFrame(dataset.data)
-x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.2)
+df = pd.DataFrame(x)
+x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.5)
 y_test = y_test.tolist()
 print "Length: ",len(y_test)
 # x_train = x[:100]
@@ -35,22 +34,22 @@ print "Length: ",len(y_test)
 # print x_train
 # print y_train
 
-mf = [[['gaussmf', {'mean': 5.006, 'sigma': 0.12424898}],
-       ['gaussmf', {'mean': 5.936, 'sigma': 0.26643265}],
-       ['gaussmf', {'mean': 6.588, 'sigma': 0.404343}]],
-      [['gaussmf', {'mean': 3.418, 'sigma': 0.14517959}],
-       ['gaussmf', {'mean': 2.77, 'sigma': 0.09846939}],
-       ['gaussmf', {'mean': 2.974, 'sigma': 0.104004}]],
-      [['gaussmf', {'mean': 1.464, 'sigma': 0.03010612}],
-       ['gaussmf', {'mean': 4.26, 'sigma': 0.22081633}],
-       ['gaussmf', {'mean': 5.552, 'sigma': 0.304588}]],
-      [['gaussmf', {'mean': 0.244, 'sigma': 0.01149388}],
-       ['gaussmf', {'mean': 1.326, 'sigma': 0.03910612}],
-       ['gaussmf', {'mean': 2.026, 'sigma': 0.075433}]]]
-# mf = get_mf(dataset)
+# mf = [[['gaussmf', {'mean': 5.006, 'sigma': 0.12424898}],
+#        ['gaussmf', {'mean': 5.936, 'sigma': 0.26643265}],
+#        ['gaussmf', {'mean': 6.588, 'sigma': 0.404343}]],
+#       [['gaussmf', {'mean': 3.418, 'sigma': 0.14517959}],
+#        ['gaussmf', {'mean': 2.77, 'sigma': 0.09846939}],
+#        ['gaussmf', {'mean': 2.974, 'sigma': 0.104004}]],
+#       [['gaussmf', {'mean': 1.464, 'sigma': 0.03010612}],
+#        ['gaussmf', {'mean': 4.26, 'sigma': 0.22081633}],
+#        ['gaussmf', {'mean': 5.552, 'sigma': 0.304588}]],
+#       [['gaussmf', {'mean': 0.244, 'sigma': 0.01149388}],
+#        ['gaussmf', {'mean': 1.326, 'sigma': 0.03910612}],
+#        ['gaussmf', {'mean': 2.026, 'sigma': 0.075433}]]]
+mf = get_mf(dataset)
 mfc = membership.membershipfunction.MemFuncs(mf)
 anf = anfis.ANFIS(x_train, y_train, mfc)
-anf.trainHybridJangOffLine(epochs=2)
+anf.trainHybridJangOffLine(epochs=3)
 # for i in range(0,119):
 #      print round(anf.fittedValues[i],3)
 y_predicted = []

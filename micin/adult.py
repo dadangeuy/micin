@@ -6,21 +6,21 @@ from anfis import membership
 from sklearn.model_selection import train_test_split
 
 from membership import get_mf
-from micin.dataset import load_adult
+from dataset import load_adult, load_adult_reduced
 
 dataset = load_adult()
 x = dataset.data
 y = dataset.target
 
 # for train, test in kf.split(X, Y):
-df = pd.DataFrame(dataset.data)
-x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.2)
+df = pd.DataFrame(x)
+x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.5)
 y_test = y_test.tolist()
 print "Length: ",len(y_test)
 mf = get_mf(dataset)
 mfc = membership.membershipfunction.MemFuncs(mf)
 anf = anfis.ANFIS(x_train, y_train, mfc)
-anf.trainHybridJangOffLine(epochs=2)
+anf.trainHybridJangOffLine(epochs=3)
 y_predicted = []
 
 for i in range(len(y_test)):
