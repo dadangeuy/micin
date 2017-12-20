@@ -3,13 +3,12 @@ from operator import truediv
 import pandas as pd
 from anfis import anfis
 from anfis import membership
-from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
+from membership import get_mf
 from micin.dataset import load_adult
 
 dataset = load_adult()
-print dataset
 x = dataset.data
 y = dataset.target
 
@@ -33,19 +32,7 @@ print "Length: ",len(y_test)
 # y_test = Y[test]
 # print x_train
 # print y_train
-
-mf = [[['gaussmf', {'mean': 5.006, 'sigma': 0.12424898}],
-       ['gaussmf', {'mean': 5.936, 'sigma': 0.26643265}],
-       ['gaussmf', {'mean': 6.588, 'sigma': 0.404343}]],
-      [['gaussmf', {'mean': 3.418, 'sigma': 0.14517959}],
-       ['gaussmf', {'mean': 2.77, 'sigma': 0.09846939}],
-       ['gaussmf', {'mean': 2.974, 'sigma': 0.104004}]],
-      [['gaussmf', {'mean': 1.464, 'sigma': 0.03010612}],
-       ['gaussmf', {'mean': 4.26, 'sigma': 0.22081633}],
-       ['gaussmf', {'mean': 5.552, 'sigma': 0.304588}]],
-      [['gaussmf', {'mean': 0.244, 'sigma': 0.01149388}],
-       ['gaussmf', {'mean': 1.326, 'sigma': 0.03910612}],
-       ['gaussmf', {'mean': 2.026, 'sigma': 0.075433}]]]
+mf = get_mf(dataset)
 mfc = membership.membershipfunction.MemFuncs(mf)
 anf = anfis.ANFIS(x_train, y_train, mfc)
 anf.trainHybridJangOffLine(epochs=2)

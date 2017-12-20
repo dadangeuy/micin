@@ -26,20 +26,22 @@ def load_adult_data(module_path, data_file_name):
                 'sex', 'capital-gain', 'capital-loss',
                 'hours-per-week', 'native-country']
         feature_names = []
-        result[attr[0]] = dataframe[0]
-        result[attr[2]] = dataframe[2]
-        result[attr[4]] = dataframe[4]
-        result[attr[10]] = dataframe[10]
-        result[attr[11]] = dataframe[11]
-        result[attr[12]] = dataframe[12]
+        result[0] = dataframe[0]
+        result[1] = dataframe[2]
+        result[2] = dataframe[4]
+        result[3] = dataframe[10]
+        result[4] = dataframe[11]
+        result[5] = dataframe[12]
+        res_idx = 6
         for i in range(14):
             if result.__contains__(attr[i]):
                 feature_names.append(attr[i])
                 continue
             trans = pd.get_dummies(dataframe[i])
             for j in trans:
-                result[j] = trans[j]
+                result[res_idx] = trans[j]
                 feature_names.append(j)
+                res_idx+=1
 
         idx = 0
         classes = {}
@@ -57,10 +59,11 @@ def load_adult_data(module_path, data_file_name):
         target = np.empty((n_samples,), dtype=np.int)
 
         for i in range(n_samples):
-            val = []
-            for j in feature_names:
-                val.append(result[j][i])
-            data[i] = np.asarray(val, dtype=np.float64)
+            tmp = []
+            for j, val in enumerate(feature_names):
+                print result[j][i]
+                tmp.append(float(result[j][i]))
+            data[i] = np.asarray(tmp, dtype=np.float64)
             target[i] = np.asarray(classes[dataframe[14][i]], dtype=np.int)
 
     return result, target, target_names, feature_names

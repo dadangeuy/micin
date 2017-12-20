@@ -4,8 +4,11 @@ import pandas as pd
 from anfis import anfis
 from anfis import membership
 from sklearn.datasets import load_iris
+from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
+import numpy
 from dataset import load_adult
+from membership import get_mf
 
 dataset = load_iris()
 x = dataset.data
@@ -15,7 +18,7 @@ y = dataset.target
 # kf = StratifiedKFold(n_splits=sizecv, shuffle=True, random_state=123)
 # for train, test in kf.split(X, Y):
 df = pd.DataFrame(dataset.data)
-x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.1)
+x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.2)
 y_test = y_test.tolist()
 print "Length: ",len(y_test)
 # x_train = x[:100]
@@ -44,6 +47,7 @@ mf = [[['gaussmf', {'mean': 5.006, 'sigma': 0.12424898}],
       [['gaussmf', {'mean': 0.244, 'sigma': 0.01149388}],
        ['gaussmf', {'mean': 1.326, 'sigma': 0.03910612}],
        ['gaussmf', {'mean': 2.026, 'sigma': 0.075433}]]]
+# mf = get_mf(dataset)
 mfc = membership.membershipfunction.MemFuncs(mf)
 anf = anfis.ANFIS(x_train, y_train, mfc)
 anf.trainHybridJangOffLine(epochs=2)
@@ -53,20 +57,20 @@ y_predicted = []
 
 for i in range(len(y_test)):
     res = round(anf.fittedValues[y_test[i]],1)
-    print res
-    resx = 2-res
-    print "\tresx1: ",resx
-    if resx-round(resx,3)>0.5:
-        print "\t\t gogo"
-        resx = resx+1
-    print "\t\t\tresx: ",resx
-    y_predicted.append(int(round(resx,2)))
-    #if abs(res-0) < abs(res -1) < abs(res -2):
-    #    y_predicted.append(0)
-    #elif abs(res-0) > abs(res -1) < abs(res -2):
-    #    y_predicted.append(1)
-    #elif abs(res-0) > abs(res-1) > abs(res-2):
-    #    y_predicted.append(2)
+    # print res
+    # resx = 2-res
+    # print "\tresx1: ",resx
+    # if resx-round(resx,3)>0.5:
+    #     print "\t\t gogo"
+    #     resx = resx+1
+    # print "\t\t\tresx: ",resx
+    # y_predicted.append(int(round(resx,2)))
+    if abs(res-0) < abs(res -1) < abs(res -2):
+       y_predicted.append(0)
+    elif abs(res-0) > abs(res -1) < abs(res -2):
+       y_predicted.append(1)
+    elif abs(res-0) > abs(res-1) > abs(res-2):
+       y_predicted.append(2)
 
 trupred = 0
 print y_test
@@ -76,9 +80,24 @@ print y_predicted
 for i in range(len(y_predicted)):
     if y_predicted[i] == y_test[i]:
         trupred +=1
+# clazz = (numpy.unique(y_predicted))
+# sum1 = 0
+# sum2 = 0
+# sum3 = 0
+# TP = 0
+# FP = 0
+# for j in range(clazz):
+#     for i in range(len(y_predicted)):
+#         if(y_test[i] == y_predicted[i] ==j):
+#             TP +=1
+#     for i in range(len(y_predicted)):
+#         if(y_test[i]==y_predicted[i] and y_predicted[i] !=j):
+#             FP +=1
 
 print "Sum of TruePrediction: ",trupred
 print truediv(trupred,len(y_test))*100, "%"
+
+print(classification_report(y_test, y_predicted))
 # anf.plotErrors()
 # anf.plotMF(12, 30)
 anf.plotResults()
