@@ -4,11 +4,12 @@ import pandas as pd
 from anfis import anfis
 from anfis import membership
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
 
 from membership import get_mf
 from dataset import load_adult, load_adult_reduced
 
-dataset = load_adult()
+dataset = load_adult_reduced()
 x = dataset.data
 y = dataset.target
 
@@ -20,19 +21,23 @@ print "Length: ",len(y_test)
 mf = get_mf(dataset)
 mfc = membership.membershipfunction.MemFuncs(mf)
 anf = anfis.ANFIS(x_train, y_train, mfc)
-anf.trainHybridJangOffLine(epochs=10)
+anf.trainHybridJangOffLine(epochs=5)
 y_predicted = []
 
 for i in range(len(y_test)):
     res = round(anf.fittedValues[y_test[i]],1)
-    print res
-    resx = 2-res
-    print "\tresx1: ",resx
-    if resx-round(resx,3)>0.5:
-        print "\t\t gogo"
-        resx = resx+1
-    print "\t\t\tresx: ",resx
-    y_predicted.append(int(round(resx,2)))
+    if abs(res - 0) < abs(res - 1):
+        y_predicted.append(0)
+    elif abs(res - 0) > abs(res - 1):
+        y_predicted.append(1)
+    # print res
+    # resx = 2-res
+    # print "\tresx1: ",resx
+    # if resx-round(resx,3)>0.5:
+    #     print "\t\t gogo"
+    #     resx = resx+1
+    # print "\t\t\tresx: ",resx
+    # y_predicted.append(int(round(resx,2)))
 
 trupred = 0
 print y_test
@@ -45,4 +50,5 @@ for i in range(len(y_predicted)):
 
 print "Sum of TruePrediction: ",trupred
 print truediv(trupred,len(y_test))*100, "%"
+print(classification_report(y_test, y_predicted))
 anf.plotResults()
