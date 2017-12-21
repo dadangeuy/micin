@@ -15,7 +15,7 @@ y = dataset.target
 
 # for train, test in kf.split(X, Y):
 df = pd.DataFrame(x)
-x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.8)
+x_train, x_test, y_train, y_test = train_test_split(df, y, test_size=0.2)
 y_test = y_test.tolist()
 print "Length: ",len(y_test)
 
